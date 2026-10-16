@@ -1,0 +1,105 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>DiaCare — Diabetes Risk Prediction</title>
+<style>
+:root{--bg:#f1f8f8;--card:#fff;--tx:#12303a;--mu:#5d7882;--pr:#0d9488;--pr2:#0f766e;--bd:#d6e6e8;--rd:#dc2626;--gn:#16a34a;--am:#d97706;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0b1a1f;--card:#12272d;--tx:#e4f1f2;--mu:#8fb0b8;--bd:#22414a;--pr:#2dd4bf;--pr2:#14b8a6}}
+:root[data-theme="dark"]{--bg:#0b1a1f;--card:#12272d;--tx:#e4f1f2;--mu:#8fb0b8;--bd:#22414a;--pr:#2dd4bf;--pr2:#14b8a6}
+html{height:100%;scroll-padding-top:70px}*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--card);border-bottom:1px solid var(--bd);display:flex;align-items:center;justify-content:space-between;padding:10px 18px;gap:10px;flex-wrap:wrap}
+.brand{font-weight:700;font-size:18px;color:var(--pr2);display:flex;gap:8px;align-items:center}.brand i{background:var(--pr);color:#fff;width:28px;height:28px;border-radius:8px;display:grid;place-items:center;font-style:normal}
+nav a{color:var(--mu);text-decoration:none;margin-left:14px;font-size:14px}nav a:hover{color:var(--pr)}
+.hero{background:linear-gradient(135deg,#0f766e,#14b8a6);color:#fff;padding:36px 18px;text-align:center}
+.hero h1{margin:6px 0;font-size:clamp(24px,5vw,38px)}.hero p{margin:0 auto;max-width:620px;opacity:.92}.tag{font-size:12px;letter-spacing:.12em;opacity:.85}
+main{max-width:1100px;margin:0 auto;padding:18px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:18px;margin-bottom:18px}
+h2{margin:0 0 4px;font-size:19px}h2 span{color:var(--pr);margin-right:8px;font-size:14px}.sub{color:var(--mu);margin:0 0 14px;font-size:14px}
+.g{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(210px,1fr))}
+label{display:block;font-size:13px;font-weight:600;margin-bottom:4px;color:var(--mu)}
+select,input[type=number],input[type=file]{width:100%;padding:9px;border:1px solid var(--bd);border-radius:8px;background:var(--bg);color:var(--tx);font:inherit}
+input[type=range]{width:100%;accent-color:var(--pr)}
+button{background:var(--pr);color:#fff;border:0;border-radius:8px;padding:10px 16px;font:600 14px inherit;cursor:pointer}button:hover{background:var(--pr2)}button.o{background:transparent;color:var(--pr);border:1px solid var(--pr)}
+.row{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+.st{background:var(--bg);border-radius:12px;padding:12px;border:1px solid var(--bd)}.st b{display:block;font-size:24px;color:var(--pr2)}.st small{color:var(--mu)}
+.two{display:grid;gap:18px;grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
+.cm{display:grid;grid-template-columns:auto 1fr 1fr;gap:6px;text-align:center;font-size:13px;max-width:360px}.cm div{padding:14px 4px;border-radius:8px}
+.tw{overflow-x:auto;max-height:420px;overflow-y:auto}table{border-collapse:collapse;width:100%;font-size:13px}th,td{padding:7px 10px;text-align:left;border-bottom:1px solid var(--bd);white-space:nowrap}th{position:sticky;top:0;background:var(--card);color:var(--mu)}
+.pill{padding:2px 9px;border-radius:99px;font-size:12px;font-weight:600;color:#fff}
+.bar{display:flex;align-items:center;gap:8px;margin:6px 0;font-size:13px}.bar span:first-child{width:130px;flex:none;overflow:hidden;text-overflow:ellipsis}.bar div{height:10px;border-radius:5px;background:var(--pr)}
+.ring{width:150px;height:150px;border-radius:50%;display:grid;place-items:center;margin:auto}.ring b{background:var(--card);width:112px;height:112px;border-radius:50%;display:grid;place-items:center;font-size:28px}
+.warn{font-size:12px;color:var(--mu);margin-top:10px}footer{text-align:center;color:var(--mu);font-size:13px;padding:20px}
+#msg{color:var(--mu);font-size:13px;margin-top:8px}
+</style></head><body>
+<header><div class="brand"><i>✚</i>DiaCare</div><nav><a href="#data">Data &amp; Model</a><a href="#res">Results</a><a href="#chk">Risk Checker</a><a href="#tbl">Patients</a></nav></header>
+<div class="hero"><div class="tag">MACHINE LEARNING • HEALTHCARE • CLASSIFICATION</div><h1>Healthcare Risk Prediction for Diabetes</h1><p>Identify diabetic patients from medical attributes using predictive models trained right in your browser.</p></div>
+<main>
+<section class="card" id="data"><h2><span>01</span>Data &amp; Model</h2><p class="sub">Use the sample patient records or upload your own CSV (needs a 0/1 outcome column; the last column is used if none is named Outcome). Optional ID and Name columns are detected and shown in the patient table.</p>
+<div class="g"><div><label>Patient Dataset</label><select id="src"><option value="s">Use Sample Data</option><option value="u">Upload CSV</option></select></div>
+<div id="upw" style="display:none"><label>CSV File</label><input type="file" id="file" accept=".csv,text/csv"></div>
+<div><label>Prediction Algorithm</label><select id="alg"><option value="lr">Logistic Regression</option><option value="knn">K-Nearest Neighbours</option><option value="nb">Gaussian Naive Bayes</option></select></div>
+<div><label>Test Split: <b id="tsv">25</b>%</label><input type="range" id="ts" min="10" max="50" value="25"></div></div>
+<div class="row"><button id="run">Train Model ↗</button><button class="o" id="dls">↓ Sample CSV</button></div><div id="msg">No dataset loaded yet.</div></section>
+<section class="card" id="res"><h2><span>02</span>Model Performance</h2><p class="sub">Evaluated on held-out test patients.</p>
+<div class="g" id="kp"></div>
+<div class="two" style="margin-top:18px"><div><h3 style="font-size:15px">Confusion Matrix</h3><div id="cm" class="cm"></div></div><div><h3 style="font-size:15px">ROC Curve</h3><div id="roc"></div></div></div>
+<h3 style="font-size:15px;margin-top:18px">Key Risk Factors</h3><div id="imp" class="sub">Train a model to see results.</div></section>
+<section class="card" id="chk"><h2><span>03</span>Patient Risk Checker</h2><p class="sub">Adjust a patient's values to estimate diabetes risk with the trained model.</p>
+<div class="two"><div class="g" id="inp" style="grid-template-columns:repeat(auto-fit,minmax(190px,1fr))"><div class="sub">Train a model first.</div></div><div style="text-align:center"><div class="ring" id="ring"><b>—</b></div><p id="cat" style="font-weight:700;margin:10px 0 2px">—</p><p class="sub" id="adv"></p></div></div>
+<div class="warn">Educational project only — not a medical diagnosis. Consult a healthcare professional.</div></section>
+<section class="card" id="tbl"><h2><span>04</span>Patient Predictions</h2><p class="sub">First 100 records scored by the model. Sample patient names are fictional.</p>
+<div class="row" style="margin:0 0 12px"><input type="text" id="q" placeholder="Search patient name or ID" style="width:auto;flex:1;min-width:180px;padding:9px;border:1px solid var(--bd);border-radius:8px;background:var(--bg);color:var(--tx);font:inherit"><select id="flt" style="width:auto"><option value="a">All patients</option><option value="h">High risk (≥60%)</option><option value="d">Actually diabetic</option></select><button class="o" id="dlr">↓ Download Results</button></div>
+<div class="tw"><table id="t"><tbody><tr><td>Load data and train a model.</td></tr></tbody></table></div></section>
+<section class="card"><b>How it works</b><p class="sub" style="margin:4px 0">Clean missing values (impossible zeros → median) → standardize → train/test split → fit model → evaluate (Accuracy, Precision, Recall, F1, ROC-AUC) → score patients.</p><p class="sub" style="margin:0">Sample data is synthetic and Pima-style (8 attributes, 768 patients). Upload the real Pima Indians Diabetes CSV for real results.</p></section>
+</main><footer>DiaCare • Diabetes Risk Prediction • Machine Learning Project</footer>
+<script>
+const $=s=>document.querySelector(s);let D=null,M=null,R=[];
+const rng=s=>()=>(s=(s*1664525+1013904223)>>>0)/4294967296,gs=r=>Math.sqrt(-2*Math.log(r()+1e-9))*Math.cos(6.283*r());
+function sample(){const r=rng(42),cols=['Pregnancies','Glucose','BloodPressure','SkinThickness','Insulin','BMI','DiabetesPedigreeFunction','Age'],X=[],y=[];
+for(let i=0;i<768;i++){const age=Math.round(21+Math.abs(gs(r))*13+r()*6),g=Math.max(50,Math.round(118+gs(r)*30)),bmi=Math.max(18,+(32+gs(r)*6.5).toFixed(1)),bp=Math.max(40,Math.round(69+gs(r)*12)),sk=Math.max(5,Math.round(21+gs(r)*9)),pg=Math.max(0,Math.round((age-20)/6+gs(r)*2)),dp=+Math.max(.08,.47+gs(r)*.3).toFixed(3),ins=Math.max(14,Math.round(80+(g-100)*1.2+gs(r)*60));
+const z=-9+.035*g+.07*bmi+.028*age+.9*dp+.04*pg;y.push(r()<1/(1+Math.exp(-z))?1:0);X.push([pg,g,bp,sk,ins,bmi,dp,age])}
+const F=['Aarav','Priya','Rohan','Ananya','Vikram','Sneha','Arjun','Kavya','Rahul','Neha','Aditya','Isha','Karan','Meera','Siddharth','Pooja','Amit','Divya','Nikhil','Riya'],L=['Sharma','Patel','Singh','Gupta','Mehta','Iyer','Reddy','Nair','Joshi','Kapoor','Desai','Verma','Shah','Rao','Khan'],meta=X.map((_,i)=>({id:'P'+String(i+1).padStart(4,'0'),name:F[Math.floor(r()*F.length)]+' '+L[Math.floor(r()*L.length)]}));
+return{cols,X,y,meta,name:'Sample data (synthetic, Pima-style)'}}
+function parse(t){const L=t.trim().split(/\r?\n/).map(l=>l.split(',').map(s=>s.trim().replace(/^"|"$/g,'')));const h=L.shift();let o=h.findIndex(c=>/outcome|class|diabet|target|label/i.test(c));if(o<0)o=h.length-1;const mi=h.map((c,i)=>i!=o&&/^(patient[ _]?)?id$|name/i.test(c)?i:-1).filter(i=>i>=0),sk=i=>i==o||mi.includes(i),ic=mi.find(i=>!/name/i.test(h[i])),nc=mi.find(i=>/name/i.test(h[i]));const X=[],y=[],meta=[];for(const r of L){if(r.length<h.length||r[o]===''||isNaN(+r[o]))continue;y.push(+r[o]>0?1:0);X.push(r.filter((_,i)=>!sk(i)).map(Number));meta.push({id:ic!=null?r[ic]:'',name:nc!=null?r[nc]:''})}
+if(X.length<30)throw 'Need at least 30 rows with a numeric 0/1 outcome column.';if(new Set(y).size<2)throw 'Outcome column needs both 0 and 1 values.';return{cols:h.filter((_,i)=>!sk(i)),X,y,meta:(ic!=null||nc!=null)?meta:null}}
+const med=a=>{a=a.filter(v=>!isNaN(v)).sort((x,y)=>x-y);return a.length?a[a.length>>1]:0};
+function clean(d){const m=d.cols.map((c,j)=>{const z=/gluc|blood|skin|insul|bmi/i.test(c),v=d.X.map(r=>z&&r[j]===0?NaN:r[j]);return med(v)});
+return d.X.map(r=>r.map((v,j)=>isNaN(v)||(/gluc|blood|skin|insul|bmi/i.test(d.cols[j])&&v===0)?m[j]:v))}
+function fit(alg,Xt,yt){const n=Xt.length,p=Xt[0].length,mu=[],sd=[];for(let j=0;j<p;j++){const c=Xt.map(r=>r[j]),m=c.reduce((a,b)=>a+b)/n;mu.push(m);sd.push(Math.sqrt(c.reduce((a,b)=>a+(b-m)**2,0)/n)||1)}
+const sc=x=>x.map((v,j)=>(v-mu[j])/sd[j]),Z=Xt.map(sc);
+if(alg=='lr'){let w=Array(p).fill(0),b=0;for(let it=0;it<500;it++){const gw=Array(p).fill(0);let gb=0;for(let i=0;i<n;i++){let z=b;for(let j=0;j<p;j++)z+=w[j]*Z[i][j];const e=1/(1+Math.exp(-z))-yt[i];for(let j=0;j<p;j++)gw[j]+=e*Z[i][j];gb+=e}for(let j=0;j<p;j++)w[j]-=.1*(gw[j]/n+.001*w[j]);b-=.1*gb/n}
+return x=>{x=sc(x);let z=b;for(let j=0;j<p;j++)z+=w[j]*x[j];return 1/(1+Math.exp(-z))}}
+if(alg=='knn')return x=>{x=sc(x);const d=Z.map((r,i)=>[r.reduce((a,v,j)=>a+(v-x[j])**2,0),yt[i]]).sort((a,b)=>a[0]-b[0]).slice(0,7);return(d.reduce((a,v)=>a+v[1],0)+.5)/8}
+const st=[0,1].map(c=>{const S=Z.filter((_,i)=>yt[i]==c),m=[],v=[];for(let j=0;j<p;j++){const q=S.reduce((a,r)=>a+r[j],0)/S.length;m.push(q);v.push(S.reduce((a,r)=>a+(r[j]-q)**2,0)/S.length+1e-3)}return{m,v,pi:S.length/n}});
+return x=>{x=sc(x);const l=st.map(s=>Math.log(s.pi)+x.reduce((a,t,j)=>a-.5*Math.log(s.v[j])-(t-s.m[j])**2/(2*s.v[j]),0));return 1/(1+Math.exp(l[0]-l[1]))}}
+function metr(p,y){let tp=0,tn=0,fp=0,fn=0;p.forEach((q,i)=>{const h=q>=.5;y[i]?(h?tp++:fn++):(h?fp++:tn++)});
+const acc=(tp+tn)/y.length,pre=tp/(tp+fp||1),rec=tp/(tp+fn||1),f1=2*pre*rec/(pre+rec||1),P=y.reduce((a,b)=>a+b,0),N=y.length-P,roc=[[0,0]];let T=0,F=0,auc=0,px=0,py=0;
+p.map((_,i)=>i).sort((a,b)=>p[b]-p[a]).forEach(i=>{y[i]?T++:F++;const x=F/N,v=T/P;auc+=(x-px)*(v+py)/2;px=x;py=v;roc.push([x,v])});return{tp,tn,fp,fn,acc,pre,rec,f1,auc,roc}}
+const pc=v=>(v*100).toFixed(1)+'%',col=v=>v>=.6?'var(--rd)':v>=.3?'var(--am)':'var(--gn)',cat=v=>v>=.6?'High Risk':v>=.3?'Moderate Risk':'Low Risk';
+function run(){if(!D)return $('#msg').textContent='Load a dataset first.';
+const X=clean(D),r=rng(7),ix=X.map((_,i)=>i);for(let i=ix.length-1;i>0;i--){const j=Math.floor(r()*(i+1));[ix[i],ix[j]]=[ix[j],ix[i]]}
+const nt=Math.max(5,Math.round(X.length*$('#ts').value/100)),te=ix.slice(0,nt),tr=ix.slice(nt);
+if(new Set(tr.map(i=>D.y[i])).size<2)return $('#msg').textContent='Training split needs both classes.';
+const pr=fit($('#alg').value,tr.map(i=>X[i]),tr.map(i=>D.y[i])),m=metr(te.map(i=>pr(X[i])),te.map(i=>D.y[i]));
+M={pr,X,m,cols:D.cols,hm:!!D.meta};R=X.map((x,i)=>({x,y:D.y[i],p:pr(x),mt:D.meta?D.meta[i]:null}));
+$('#msg').textContent=D.name+' • '+X.length+' patients • '+(X.length-nt)+' train / '+nt+' test';
+$('#kp').innerHTML=[['Patients',X.length,'records analyzed'],['Diabetic',pc(D.y.reduce((a,b)=>a+b)/D.y.length),'of all patients'],['Accuracy',pc(m.acc),'test set'],['ROC-AUC',m.auc.toFixed(3),'higher is better'],['Precision',pc(m.pre),'of flagged are diabetic'],['Recall',pc(m.rec),'of diabetics caught'],['F1 Score',m.f1.toFixed(3),'precision/recall balance']].map(a=>`<div class="st"><small>${a[0]}</small><b>${a[1]}</b><small>${a[2]}</small></div>`).join('');
+const c=(v,l,b)=>`<div style="background:${b};color:#fff"><b style="font-size:20px">${v}</b><br>${l}</div>`;
+$('#cm').innerHTML=`<span></span><b>Pred. No</b><b>Pred. Yes</b><b>Actual No</b>${c(m.tn,'True Neg','#16a34a')}${c(m.fp,'False Pos','#d97706')}<b>Actual Yes</b>${c(m.fn,'False Neg','#dc2626')}${c(m.tp,'True Pos','#0d9488')}`;
+const pts=m.roc.map(q=>(30+q[0]*250)+','+(270-q[1]*250)).join(' ');
+$('#roc').innerHTML=`<svg viewBox="0 0 300 300" style="width:100%;max-width:340px"><rect x="30" y="20" width="250" height="250" fill="none" stroke="var(--bd)"/><line x1="30" y1="270" x2="280" y2="20" stroke="var(--mu)" stroke-dasharray="4"/><polyline points="${pts}" fill="none" stroke="var(--pr)" stroke-width="2.5"/><text x="155" y="292" font-size="11" fill="var(--mu)" text-anchor="middle">False Positive Rate</text><text x="10" y="150" font-size="11" fill="var(--mu)" transform="rotate(-90 10 150)" text-anchor="middle">True Positive Rate</text><text x="270" y="255" font-size="12" fill="var(--tx)" text-anchor="end">AUC ${m.auc.toFixed(3)}</text></svg>`;
+const im=D.cols.map((n,j)=>{const a=X.filter((_,i)=>D.y[i]==1).map(x=>x[j]),b=X.filter((_,i)=>!D.y[i]).map(x=>x[j]),ma=a.reduce((s,v)=>s+v,0)/a.length,mb=b.reduce((s,v)=>s+v,0)/b.length,sdv=Math.sqrt(X.reduce((s,x)=>s+(x[j]-(ma+mb)/2)**2,0)/X.length)||1;return[n,Math.abs(ma-mb)/sdv]}).sort((a,b)=>b[1]-a[1]),mx=im[0][1]||1;
+$('#imp').className='';$('#imp').innerHTML=im.map(a=>`<div class="bar"><span>${a[0]}</span><div style="width:${a[1]/mx*60}%"></div><small>${a[1].toFixed(2)}</small></div>`).join('')+'<div class="sub">Standardized difference between diabetic and non-diabetic patients.</div>';
+$('#inp').innerHTML=D.cols.map((n,j)=>{const v=X.map(x=>x[j]),lo=Math.min(...v),hi=Math.max(...v),df=med(v),st=hi-lo>20?1:.01;return`<div><label>${n}: <b id="v${j}">${df}</b></label><input type="range" data-j="${j}" min="${lo}" max="${hi}" step="${st}" value="${df}"></div>`}).join('');
+document.querySelectorAll('#inp input').forEach(e=>e.oninput=chk);chk();tab()}
+function chk(){if(!M)return;const x=[...document.querySelectorAll('#inp input')].map(e=>(document.getElementById('v'+e.dataset.j).textContent=e.value,+e.value)),p=M.pr(x);
+$('#ring').style.background=`conic-gradient(${col(p)} ${p*360}deg,var(--bd) 0)`;$('#ring').innerHTML='<b>'+Math.round(p*100)+'%</b>';$('#cat').textContent=cat(p);$('#cat').style.color=col(p);
+$('#adv').textContent=p>=.6?'Elevated likelihood. A clinical glucose test (HbA1c) is recommended.':p>=.3?'Some risk factors present. Consider lifestyle review and screening.':'Low estimated likelihood. Keep up healthy habits and routine checks.'}
+function tab(){if(!M)return;const q=$('#q').value.toLowerCase(),f=$('#flt').value,rows=R.filter(r=>(f=='a'||(f=='h'?r.p>=.6:r.y))&&(!q||(r.mt&&(r.mt.id+' '+r.mt.name).toLowerCase().includes(q)))).slice(0,100);
+$('#t').innerHTML='<thead><tr><th>'+(M.hm?'ID</th><th>Patient Name':'#')+'</th>'+M.cols.map(c=>'<th>'+c+'</th>').join('')+'<th>Actual</th><th>Risk</th><th>Level</th></tr></thead><tbody>'+rows.map((r,i)=>`<tr>${M.hm?`<td>${r.mt.id}</td><td>${r.mt.name}</td>`:`<td>${i+1}</td>`}${r.x.map(v=>'<td>'+(+v.toFixed(2))+'</td>').join('')}<td>${r.y?'Diabetic':'Healthy'}</td><td>${pc(r.p)}</td><td><span class="pill" style="background:${col(r.p)}">${cat(r.p)}</span></td></tr>`).join('')+'</tbody>'}
+function dl(name,txt){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([txt],{type:'text/csv'}));a.download=name;a.click()}
+$('#src').onchange=e=>{$('#upw').style.display=e.target.value=='u'?'block':'none';if(e.target.value=='s'){D=sample();$('#msg').textContent='Sample data loaded: 768 patients.'}else{D=null;$('#msg').textContent='Choose a CSV file.'}};
+$('#file').onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{D=parse(r.result);D.name=f.name;$('#msg').textContent=f.name+' loaded: '+D.X.length+' rows, '+D.cols.length+' features.'}catch(x){D=null;$('#msg').textContent='Error: '+x}};r.readAsText(f)};
+$('#ts').oninput=e=>$('#tsv').textContent=e.target.value;$('#run').onclick=run;$('#flt').onchange=tab;$('#q').oninput=tab;
+$('#dls').onclick=()=>{const s=sample();dl('sample_diabetes.csv','ID,Name,'+s.cols.join(',')+',Outcome\n'+s.X.map((x,i)=>s.meta[i].id+','+s.meta[i].name+','+x.join(',')+','+s.y[i]).join('\n'))};
+$('#dlr').onclick=()=>M?dl('diabetes_predictions.csv',(M.hm?'ID,Name,':'')+M.cols.join(',')+',Actual,RiskPercent\n'+R.map(r=>(M.hm?r.mt.id+','+r.mt.name+',':'')+r.x.join(',')+','+r.y+','+(r.p*100).toFixed(1)).join('\n')):0;
+D=sample();$('#msg').textContent='Sample data loaded: 768 patients. Press Train Model.';run();
+</script></body></html>
